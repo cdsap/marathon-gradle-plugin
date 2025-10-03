@@ -249,6 +249,7 @@ class MarathonPlugin : Plugin<Project> {
                     this.vendorConfigurationBuilder.set(vendorConfigurationJson)
                     this.jsonService.set(jsonServiceProvider)
                     sdk.set(sdkDirectory)
+                    sdkPath.set(sdkDirectory.map { dir -> dir.asFile.name })
                     marathonfile.set(project.layout.buildDirectory.dir("marathon").map { it.dir(variantName) }
                                          .map { it.file("Marathonfile") })
                 }
