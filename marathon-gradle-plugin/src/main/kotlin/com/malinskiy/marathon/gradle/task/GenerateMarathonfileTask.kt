@@ -14,12 +14,9 @@ import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.OutputFile
-import org.gradle.api.tasks.PathSensitive
-import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.property
@@ -44,20 +41,22 @@ open class GenerateMarathonfileTask @Inject constructor(objects: ObjectFactory) 
     @Nested
     val applicationBundle: ListProperty<GradleAndroidTestBundle> = objects.listProperty()
 
-    @InputDirectory
-    @PathSensitive(PathSensitivity.NAME_ONLY)
+    @Internal
     val sdk: DirectoryProperty = objects.directoryProperty()
+
+    @Input
+    val sdkPath: Property<String> = objects.property()
 
     @OutputFile
     val marathonfile: RegularFileProperty = objects.fileProperty()
 
     @Internal
     val jsonService: Property<JsonService> = objects.property()
-    
+
     @TaskAction
     fun write() {
         val json = jsonService.get()
-        
+
         // Override stuff coming from AGP
         val androidConfiguration = vendorConfigurationBuilder.let { json.parseVendor(it.get()) }.apply {
             androidSdk = sdk.get().asFile
