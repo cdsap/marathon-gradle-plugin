@@ -28,8 +28,10 @@ open class MarathonRunTask @Inject constructor(objects: ObjectFactory) : Abstrac
     val dist: DirectoryProperty = objects.directoryProperty()
 
     @OutputDirectory
-    val fakeLockingOutput = File(project.rootProject.buildDir, "fake-marathon-locking-output")
-    
+    val fakeLockingOutput: DirectoryProperty = objects.directoryProperty().convention(
+        project.layout.buildDirectory.dir("fake-marathon-locking-output")
+    )
+
     private var ignoreFailure: Boolean = false
 
     override fun exec() {
